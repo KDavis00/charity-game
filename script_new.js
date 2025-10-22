@@ -62,7 +62,7 @@ function checkAchievements() {
     });
 }
 
-// Water facts array
+// Water facts array (duplicates removed)
 const waterFacts = [
   "About 71% of the Earth's surface is water, but only 2.5% is fresh.",
   "Drinking clean water prevents dehydration and improves health.",
@@ -74,14 +74,20 @@ const waterFacts = [
   "Charity: Water helps bring clean water to communities worldwide."
 ];
 
-// Show water fact popup
+// Show water fact popup (no duplicate in a row)
+let lastFactIndex = -1;
 function showWaterFact() {
-    const factIndex = Math.floor(Math.random() * waterFacts.length);
+    let factIndex;
+    do {
+        factIndex = Math.floor(Math.random() * waterFacts.length);
+    } while (factIndex === lastFactIndex && waterFacts.length > 1);
+    lastFactIndex = factIndex;
+
     const popup = document.createElement('div');
     popup.className = 'fact-popup';
     popup.innerHTML = `<h3>Water Fact!</h3><p>${waterFacts[factIndex]}</p>`;
     document.body.appendChild(popup);
-    
+
     setTimeout(() => {
         popup.remove();
     }, 4000);
@@ -355,8 +361,75 @@ setInterval(() => {
     createFacilityButtons();
 }, 1000);
 
+// Prestige system variables
+let prestigePoints = 0;
+
+// Add Prestige Button to DOM
+const prestigeBtn = document.createElement('button');
+prestigeBtn.id = 'prestige-btn';
+prestigeBtn.textContent = 'Prestige (Reset for Bonus)';
+prestigeBtn.style.margin = '10px';
+document.body.insertBefore(prestigeBtn, document.body.firstChild);
+
+// Prestige info display
+const prestigeInfo = document.createElement('div');
+prestigeInfo.id = 'prestige-info';
+prestigeInfo.style.margin = '10px';
+prestigeInfo.style.fontWeight = 'bold';
+document.body.insertBefore(prestigeInfo, prestigeBtn.nextSibling);
+
+// Calculate prestige points earned on reset
+function calculatePrestigeGain() {
+    // Example: 1 prestige point per 10,000 totalWater (minimum 1 if eligible)
+    return totalWater >= 10000 ? Math.floor(totalWater / 10000) : 0;
+}
+
+// Update prestige info display
+function updatePrestigeInfo() {
+    prestigeInfo.textContent = `Prestige Points: ${prestigePoints} | Multiplier: x${multiplier} | Next Prestige: +${calculatePrestigeGain()} pts`;
+}
+
+// Prestige button click handler
+prestigeBtn.addEventListener('click', () => {
+    const gain = calculatePrestigeGain();
+    if (gain > 0) {
+        if (confirm(`Prestige will reset your progress for +${gain} prestige point(s) and increase your multiplier! Continue?`)) {
+            prestigePoints += gain;
+            multiplier = 1 + prestigePoints * 0.5; // Each point = +0.5x multiplier
+            // Reset game state
+            money = 0;
+            totalWater = 0;
+            waterPerClick = 1;
+            peopleHelped = 0;
+            waterPerSec = 0;
+            lastMilestone = 0;
+            clickUpgrades.forEach(u => u.count = 0);
+            facilities.forEach(f => f.count = 0);
+            achievements.forEach(a => a.earned = false);
+            // Update UI
+            createUpgradeButtons();
+            createFacilityButtons();
+            updateWaterPerSec();
+            updateDisplay();
+            updatePrestigeInfo();
+            // Remove all achievement popups
+            document.querySelectorAll('.achievement-popup').forEach(e => e.remove());
+        }
+    } else {
+        alert('You need at least 10,000 total water to prestige!');
+    }
+});
+
+// Update prestige info on relevant changes
+function prestigeAwareUpdate() {
+    updatePrestigeInfo();
+    updateDisplay();
+}
+setInterval(updatePrestigeInfo, 1000);
+
 // Initial setup
 createFacilityButtons();
 createUpgradeButtons();
 updateWaterPerSec();
 updateDisplay();
+updatePrestigeInfo();
