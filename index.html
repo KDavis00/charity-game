@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>PureWater Tycoon</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1><img src="charitywater.png" alt="Charity: Water Logo" height="70"> Charity:Water Tycoon💧</h1>
+
+<div id="counters">
+  <div class="counter">
+    <div>Funds</div>
+    <div>$<span id="money">0</span></div>
+  </div>
+  <div class="counter">
+    <div>Total Water</div>
+    <div><span id="total-water">0</span>L</div>
+  </div>
+  <div class="counter">
+    <div>People Helped</div>
+    <div><span id="people-helped">0</span></div>
+  </div>
+  <div class="counter">
+    <div>Multiplier</div>
+    <div>x<span id="multiplier">1</span></div>
+  </div>
+  <div class="counter">
+    <div>Water per Click</div>
+    <div><span id="click-amount">1</span>L</div>
+  </div>
+  <div class="counter" style="color:#009ee3;">
+    <div>Water per Second</div>
+    <div><span id="water-per-sec">0</span>L/s</div>
+  </div>
+</div>
+
+<button id="click-btn">
+  <img src="water-bottle2.png" alt="Water Bottle" id="bottle-img">
+</button>
+
+<div id="milestone-popup"></div>
+
+<div>
+  <button id="prestige-btn">Expand Global Mission</button>
+  <button id="donate-btn">Donate to Charity: Water</button>
+</div>
+
+<div class="game-section">
+  <div id="tabs-container">
+    <div id="tabs">
+      <button class="tab-btn active" data-tab="facilities-tab">
+        <span class="tab-icon">🏢</span>
+        <span class="tab-text">Facilities</span>
+      </button>
+      <button class="tab-btn" data-tab="upgrades-tab">
+        <span class="tab-icon">⬆️</span>
+        <span class="tab-text">Upgrades</span>
+      </button>
+    </div>
+    <div id="tab-content">
+      <div id="facilities-tab" class="tab active"></div>
+      <div id="upgrades-tab" class="tab"></div>
+    </div>
+  </div>
+</div>
+
+<div id="water-fact-popup"><p id="water-fact-text"></p></div>
+
+<script src="script_new.js"></script>
+</body>
+</html>
